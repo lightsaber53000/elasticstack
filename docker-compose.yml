@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.2
+    ports:
+      - 9200:9200
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.8.2
+    ports:
+      - 5601:5601
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.8.2
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline/
+      - ./logstash/settings:/usr/share/logstash/config/
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.8.2
+    environment:
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=ntya==PBp8NzNYwJ*os8
+    volumes:
+      - ./filebeat/filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./filebeat/logs:/filebeat/logs
+
+networks:
+  default:
+    name: elastic
+
